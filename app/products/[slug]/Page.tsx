@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
 import { waLink } from '@/components/ProductCard';
@@ -22,11 +23,13 @@ export async function generateMetadata({
   };
 }
 
+const poppins: CSSProperties = { fontFamily: 'Poppins, sans-serif' };
+const playfair: CSSProperties = { fontFamily: '"Playfair Display", serif' };
+
 export default function ProductDetail({ params }: { params: { slug: string } }) {
   const product = products.find((p) => p.slug === params.slug);
   if (!product) notFound();
 
-  // Use images array if available, otherwise fall back to single imageUrl
   const galleryImages =
     product.images && product.images.length > 0
       ? product.images
@@ -36,12 +39,22 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
     .filter((p) => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
 
+  const waBtnStyle: CSSProperties = {
+    background: '#25D366',
+    boxShadow: '0 4px 24px rgba(37,211,102,0.35)',
+    fontFamily: 'Poppins, sans-serif',
+  };
+
+  const categoryBadgeStyle: CSSProperties = {
+    fontFamily: 'Poppins, sans-serif',
+  };
+
   return (
     <main className="max-w-5xl mx-auto px-4 py-12">
       <Link
         href="/products"
         className="text-[#1d4ed8] text-sm font-semibold mb-6 inline-block hover:underline"
-        style={{ fontFamily: 'Poppins, sans-serif' }}
+        style={poppins}
       >
         ← Back to Products
       </Link>
@@ -49,15 +62,12 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Image Gallery */}
         <div>
-          {/* Main large image */}
           <img
             src={galleryImages[0]}
             alt={product.name}
             className="w-full rounded-2xl object-cover"
             style={{ aspectRatio: '4/5', boxShadow: '0 4px 32px rgba(15,23,42,0.12)' }}
           />
-
-          {/* Additional images grid — shows if more than 1 image */}
           {galleryImages.length > 1 && (
             <div className="grid grid-cols-3 gap-3 mt-4">
               {galleryImages.map((img, i) => (
@@ -77,32 +87,32 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
           )}
         </div>
 
-        {/* Product Info — unchanged */}
+        {/* Product Info */}
         <div>
           <span
             className="text-xs font-semibold text-[#1d4ed8] bg-[#dbeafe] px-3 py-1 rounded-lg"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
+            style={categoryBadgeStyle}
           >
             {product.category}
           </span>
+
           <h1
             className="font-bold text-[#0f172a] mt-3 leading-tight"
-            style={{
-              fontFamily: '"Playfair Display", serif',
-              fontSize: 'clamp(24px, 3vw, 38px)',
-            }}
+            style={{ ...playfair, fontSize: 'clamp(24px, 3vw, 38px)' }}
           >
             {product.name}
           </h1>
+
           <p
             className="font-bold text-[#1d4ed8] text-3xl mt-3"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
+            style={poppins}
           >
             ₹{product.price}
           </p>
+
           <p
             className="text-[#475569] text-sm leading-relaxed mt-3"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
+            style={poppins}
           >
             {product.description}
           </p>
@@ -111,7 +121,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
             <div className="mt-5">
               <p
                 className="text-xs font-semibold text-[#0f172a] uppercase tracking-wide mb-2"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
+                style={poppins}
               >
                 Available Sizes
               </p>
@@ -120,7 +130,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                   <span
                     key={s}
                     className="border border-[#e2e8f0] px-4 py-1 rounded-lg text-sm text-[#374151] hover:border-[#1d4ed8] cursor-pointer transition-colors"
-                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                    style={poppins}
                   >
                     {s}
                   </span>
@@ -133,7 +143,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
             <div className="mt-4">
               <p
                 className="text-xs font-semibold text-[#0f172a] uppercase tracking-wide mb-2"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
+                style={poppins}
               >
                 Colors
               </p>
@@ -142,7 +152,7 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
                   <span
                     key={c}
                     className="bg-[#f1f5f9] px-4 py-1 rounded-lg text-sm text-[#374151]"
-                    style={{ fontFamily: 'Poppins, sans-serif' }}
+                    style={poppins}
                   >
                     {c}
                   </span>
@@ -156,29 +166,25 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-3 mt-8 text-white font-bold text-lg py-4 rounded-xl hover:opacity-90 transition-opacity"
-            style={{
-              fontFamily: 'Poppins, sans-serif',
-              background: '#25D366',
-              boxShadow: '0 4px 24px rgba(37,211,102,0.35)',
-            }}
+            style={waBtnStyle}
           >
             💬 Buy Now via WhatsApp
           </a>
+
           <p
             className="text-center text-[#94a3b8] text-xs mt-3"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
+            style={poppins}
           >
             Click to open WhatsApp and place your order instantly
           </p>
         </div>
       </div>
 
-      {/* Related Products */}
       {related.length > 0 && (
         <section className="mt-16">
           <h2
             className="font-bold text-[#0f172a] text-2xl mb-6"
-            style={{ fontFamily: '"Playfair Display", serif' }}
+            style={playfair}
           >
             You May Also Like
           </h2>
@@ -191,4 +197,4 @@ export default function ProductDetail({ params }: { params: { slug: string } }) 
       )}
     </main>
   );
-      }
+                  }
